@@ -8,7 +8,7 @@
 // Development Tasks:
 // [x] Write function to import bip39 dict to string array
 // [x] Write function to convert dec to base62
-// [ ] Write function to convert base62 to dec
+// [x] Write function to convert base62 to dec
 // [x] Write a help text function
 // [ ] Establish main function
 // [x] Declare global arrays
@@ -22,7 +22,7 @@
 void show_help(void); //displays help text
 void generate_bip39_array(void); //fills the array from bip39.txt file
 const char *decimal_to_base62(int dec); //converts dec to b62, returns string
-int  base62_to_decimal(char *b62[]); //converts b62 to dec, returns dec as int
+int  base62_to_decimal(char *b62); //converts b62 to dec, returns dec as int
 
 //global variables
 char dtob[8]; //return variable for dec_to_base
@@ -54,8 +54,8 @@ int main(int argc, char *argv[]) {
 	} else if (strcmp(argv[1], "-t") == 0) {
 
 		//trace, debugging goes here
-		generate_bip39_array();
-		printf("%s\n", bip39[1]);
+		printf("%i\n", base62_to_decimal(argv[2]));
+
 
 	} else { 
 
@@ -67,11 +67,31 @@ int main(int argc, char *argv[]) {
 }
 
 //supporting functions
-int base62_to_decimal(char *b62[]) {
-	int num;
+int base62_to_decimal(char *b62) {
+	int  itemp[4];
+	int  output = 0;
+	int  base = 62;
+	int  power = 1;
 	
-	return num;
+	for (int i = 1; i < strlen(b62); i++)
+		power = power * base;
+
+	for (int i = 0; i < strlen(b62); i++)
+		for (int j = 0; j < base; j++)
+			if (b62[i] == base62_alphabet[j])
+				itemp[i] = j;
+	
+	for (int i = 0; i < strlen(b62); i++) {
+		itemp[i] = itemp[i] * power;
+		power = power / base;
+	}
+
+	for (int i = 0; i < strlen(b62); i++)
+		output = output + itemp[i];
+	
+	return output;
 }
+
 const char *decimal_to_base62(int dec) {
 	int  num    = dec;
 	int  base   = 62;
