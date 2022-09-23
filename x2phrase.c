@@ -54,8 +54,9 @@ int main(int argc, char *argv[]) {
 	} else if (strcmp(argv[1], "-t") == 0) {
 
 		//trace, debugging goes here
-		printf("%i\n", base62_to_decimal(argv[2]));
-
+		generate_bip39_array();
+		for (int i = 1; i <= 2048; i++)
+			printf("%s\n", bip39[i]);
 
 	} else { 
 
@@ -84,11 +85,9 @@ int base62_to_decimal(char *b62) {
 	for (int i = 0; i < strlen(b62); i++) {
 		itemp[i] = itemp[i] * power;
 		power = power / base;
+		output = output + itemp[i];
 	}
 
-	for (int i = 0; i < strlen(b62); i++)
-		output = output + itemp[i];
-	
 	return output;
 }
 
@@ -131,7 +130,8 @@ void show_help(void) { //displayed each time an incorrect arg set is used.
 void generate_bip39_array(void) { //fills the array, run once
 	FILE *fp;
 	//char bip39[2048][16]; //moved to global
-	fp = fopen("./BIP39.txt", "r");
+	
+	fp = fopen("./BIP39", "r");
 	for (int i = 1; i <= 2048; i++)
 		fscanf(fp, "%s", bip39[i]);
 	fclose(fp);
