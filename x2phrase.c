@@ -45,18 +45,51 @@ int main(int argc, char *argv[]) {
 
 	} else if (strcmp(argv[1], "-e") == 0) {
 
-		//encode
+		//encoder
+		char stemp[4];
+		char *key = argv[2];
+		int  cpos = 0;
+		int  itemp;
+
+		generate_bip39_array();
+
+		while (cpos < strlen(key)) {
+			
+			// grab 2 char from key, make a string and encode
+			for (int i = 0; i < 2; i++) {
+				stemp[i] = key[cpos];
+				cpos++;
+			} stemp[3] = '\0';
+			itemp = base62_to_decimal(stemp);
+
+			if (itemp <= 2048) { //test if lower than x2
+				
+				printf("%s ", bip39[itemp-1]); //print word, consider zero-index
+			
+			} else { //char pair value is too large, just grab the first char
+				
+				stemp[1] = '\0'; //truncate string to first char
+				itemp = base62_to_decimal(stemp); //overwrite itemp
+				printf("%s ", bip39[itemp-1]); //print word, consider zero-index
+				cpos--; //decrement char position for next run
+
+			}
+		}
+		printf("\n");
 
 	} else if (strcmp(argv[1], "-d") == 0) {
 
-		//decode
-	
-	} else if (strcmp(argv[1], "-t") == 0) {
-
-		//trace, debugging goes here
+		//decoder
 		generate_bip39_array();
-		for (int i = 1; i <= 2048; i++)
-			printf("%s\n", bip39[i]);
+
+		for (int i = 2; i < argc; i++)
+			for (int j = 0; j < 2048; j++)
+				if (strcmp(argv[i], bip39[j]) == 0)
+					printf("%s", decimal_to_base62(j+1));
+		
+		printf("\n");
+	
+	//} else if (strcmp(argv[1], "-t") == 0) { //un-comment for debugging
 
 	} else { 
 
@@ -75,7 +108,7 @@ int base62_to_decimal(char *b62) {
 	int  power = 1;
 	
 	for (int i = 1; i < strlen(b62); i++)
-		power = power * base;
+		power *= base;
 
 	for (int i = 0; i < strlen(b62); i++)
 		for (int j = 0; j < base; j++)
@@ -84,8 +117,8 @@ int base62_to_decimal(char *b62) {
 	
 	for (int i = 0; i < strlen(b62); i++) {
 		itemp[i] = itemp[i] * power;
-		power = power / base;
-		output = output + itemp[i];
+		power /= base;
+		output += itemp[i];
 	}
 
 	return output;
@@ -104,15 +137,15 @@ const char *decimal_to_base62(int dec) {
 		dtob[i] = 0;
 
 	while (place <= num / base)
-		place = place * base;
+		place *= base;
 
 	while (place >= 1) {
 		while (num >= place) {
 			pcount++;
-			num = num - place;
+			num -= place;
 		}
 		dtob[scount] = base62_alphabet[pcount];
-		place = place / base;
+		place /= base;
 		pcount = 0;
 		scount++;
 	}
@@ -132,7 +165,7 @@ void generate_bip39_array(void) { //fills the array, run once
 	//char bip39[2048][16]; //moved to global
 	
 	fp = fopen("./BIP39", "r");
-	for (int i = 1; i <= 2048; i++)
+	for (int i = 0; i < 2048; i++)
 		fscanf(fp, "%s", bip39[i]);
 	fclose(fp);
 }
