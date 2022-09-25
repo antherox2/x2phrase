@@ -5,14 +5,6 @@
 *                                                               *
 \***************************************************************/
 
-// Development Tasks:
-// [x] Write function to import bip39 dict to string array
-// [x] Write function to convert dec to base62
-// [x] Write function to convert base62 to dec
-// [x] Write a help text function
-// [ ] Establish main function
-// [x] Declare global arrays
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
