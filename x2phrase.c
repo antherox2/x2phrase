@@ -10,11 +10,13 @@
 #include <stdlib.h>
 #include <math.h>
 
-//function declarations
+//function definitions
 void show_help(void); //displays help text
 void generate_bip39_array(void); //fills the array from bip39.txt file
 const char *decimal_to_base62(int dec); //converts dec to b62, returns string
 int  base62_to_decimal(char *b62); //converts b62 to dec, returns dec as int
+void x2_encode(int argc, char *argv[]);
+void x2_decode(int argc, char *argv[]);
 
 //global variables
 char dtob[8]; //return variable for dec_to_base
@@ -37,13 +39,35 @@ int main(int argc, char *argv[]) {
 
 	} else if (strcmp(argv[1], "-e") == 0) {
 
+		generate_bip39_array();
+
+		x2_encode(argc, argv);
+
+	} else if (strcmp(argv[1], "-d") == 0) {
+
+		generate_bip39_array();
+
+		x2_decode(argc, argv);
+	
+	//} else if (strcmp(argv[1], "-t") == 0) { //un-comment for debugging
+
+	} else { 
+
+		show_help();
+
+	}
+
+	return 0;
+}
+
+//supporting functions
+void x2_encode(int argc, char *argv[]) {
+
 		//encoder
 		char stemp[4];
 		char *key = argv[2];
 		int  cpos = 0;
 		int  itemp;
-
-		generate_bip39_array();
 
 		while (cpos < strlen(key)) {
 			
@@ -68,11 +92,9 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		printf("\n");
+}
 
-	} else if (strcmp(argv[1], "-d") == 0) {
-
-		//decoder
-		generate_bip39_array();
+void x2_decode(int argc, char *argv[]) {
 
 		for (int i = 2; i < argc; i++)
 			for (int j = 0; j < 2048; j++)
@@ -80,19 +102,9 @@ int main(int argc, char *argv[]) {
 					printf("%s", decimal_to_base62(j+1));
 		
 		printf("\n");
-	
-	//} else if (strcmp(argv[1], "-t") == 0) { //un-comment for debugging
 
-	} else { 
-
-		show_help();
-
-	}
-
-	return 0;
 }
 
-//supporting functions
 int base62_to_decimal(char *b62) {
 	int  itemp[4];
 	int  output = 0;
