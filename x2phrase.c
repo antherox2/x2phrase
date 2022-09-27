@@ -14,7 +14,7 @@
 void show_help(void); //displays help text
 void generate_bip39_array(void); //fills the array from bip39.txt file
 const char *decimal_to_base62(int dec); //converts dec to b62, returns string
-int  base62_to_decimal(char *b62); //converts b62 to dec, returns dec as int
+const int  base62_to_decimal(char *b62); //converts b62 to dec, returns dec as int
 void x2_encode(int argc, char *argv[]);
 void x2_decode(int argc, char *argv[]);
 
@@ -38,18 +38,22 @@ int main(int argc, char *argv[]) {
 		show_help();
 
 	} else if (strcmp(argv[1], "-e") == 0) {
-
-		generate_bip39_array();
-
+		
+		generate_bip39_array(); 
+		
+		//pass arguments to encoder
 		x2_encode(argc, argv);
 
 	} else if (strcmp(argv[1], "-d") == 0) {
 
 		generate_bip39_array();
 
+		//pass arguments to decoder
 		x2_decode(argc, argv);
 	
-	//} else if (strcmp(argv[1], "-t") == 0) { //un-comment for debugging
+//	} else if (strcmp(argv[1], "-t") == 0) { 
+
+		// uncomment line above for debugging, trace code goes here
 
 	} else { 
 
@@ -63,7 +67,6 @@ int main(int argc, char *argv[]) {
 //supporting functions
 void x2_encode(int argc, char *argv[]) {
 
-		//encoder
 		char stemp[4];
 		char *key = argv[2];
 		int  cpos = 0;
@@ -105,7 +108,7 @@ void x2_decode(int argc, char *argv[]) {
 
 }
 
-int base62_to_decimal(char *b62) {
+const int base62_to_decimal(char *b62) {
 	int  itemp[4];
 	int  output = 0;
 	int  base = 62;
