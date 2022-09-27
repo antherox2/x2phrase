@@ -111,8 +111,8 @@ void x2_decode(int argc, char *argv[]) {
 const int base62_to_decimal(char *b62) {
 	int  itemp[4];
 	int  output = 0;
-	int  base = 62;
-	int  power = 1;
+	int  base   = 62;
+	int  power  = 1;
 	
 	for (int i = 1; i < strlen(b62); i++)
 		power *= base;
